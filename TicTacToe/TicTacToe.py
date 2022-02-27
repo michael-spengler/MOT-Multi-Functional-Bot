@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 import random
+from telegram.ext import ConversationHandler
+
 randomNumber = random.randint(1, 99)
 random.seed(randomNumber)
 
@@ -85,7 +87,8 @@ def finished(state):
 def get_move(state, update):
     while True:
         try:
-            row, col = input('Bitte Zug eingeben: ').split(',')
+            row, col = update.text.message.split(",")
+            
             row, col = int(row), int(col)
             if row not in {0, 1, 2} or col not in {0, 1, 2}:
                 update.message.reply_text('Illegale Eingabe. Die Eingabe muss die Form "Zeile, Spalte" haben')  
@@ -208,25 +211,35 @@ def best_move(State):
     BestState = random.choice(BestMoves)
     return bestValue, BestState
 
-
-def main(state, update, context) -> None:
+MAIN = 1
+def main(state, update, context) -> int:
+    global gStart
     State = gStart
-    while (True):
-        val, State = best_move(State)
-        x = draw(State)
-        #print(x)
-        update.message.reply_text(x)
-        if finished(State):
-            final_msg(State, update)
-            break
-        State = get_move(State, update)
-        x = draw(State)
-        #print(x)
-        update.message.reply_text(x)
-        if finished(State):
-            final_msg(State, update)
-            break
+       
+    val, State = best_move(State)
+    x = draw(State)
+    #print(x)
+    update.message.reply_text(x)
+    if finished(State):
+        final_msg(State, update)
+        gStart = 0
+        return ConversationHandler.END
     
+    
+    return PLAYER
+
+PLAYER = 2
+def player(state, update, context) -> int:
+    State = get_move(State, update)
+    x = draw(State)
+    #print(x)
+    update.message.reply_text(x)
+    if finished(State):
+        final_msg(State, update)
+        gStart=0
+        return ConversationHandler.END
+    
+    return MAIN
 
 if __name__ == '__main__':
     print(gStart)

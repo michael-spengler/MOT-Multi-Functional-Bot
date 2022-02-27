@@ -1,7 +1,8 @@
+from ctypes.wintypes import INT
 from telegram import Update, ForceReply
-from telegram.ext import Updater, CallbackContext
-import TicTacToe.TicTacToe_Multiplayer.TicTacToeMultiplayer
-import TicTacToe.TicTacToe_Singleplayer.AlphaBetaPruningMemoization
+from telegram.ext import Updater, CallbackContext, ConversationHandler
+import TicTacToe
+import TicTacToe.TicTacToe
 
 
 def log_input(update):
@@ -16,4 +17,8 @@ def TicTacToe_Multiplayer(update: Update, context: CallbackContext) -> None:
 
 def TicTacToe_Single(update: Update, context: CallbackContext) -> None:
     update.message.reply_text("You are trying to play TicTacToe Singleplayer!")
-    TicTacToe.TicTacToe_Singleplayer.TicTacToe.main(0,  update, CallbackContext)
+    TicTacToe.TicTacToe.main(0,  update, CallbackContext)
+
+def stop_Tic(update: Update, context: CallbackContext) -> int:
+    update.message.reply_text("Du hast das TicTacToe Spiel beendet!")
+    return ConversationHandler.END
