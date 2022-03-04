@@ -2,7 +2,7 @@ from conf import API_KEY
 from main_commands import cat, echo, help, noodle, start
 from telegram.ext import CommandHandler, ConversationHandler, Filters, MessageHandler, Updater
 from games.wordle.wordle_commands import guess, howto, stats, stop, wordle
-from MovieGame.moviegame import *
+from games.MovieGame.moviegame import *
 from games.numbergame.numbergame_commands import numb, stopnumbergame, numbergame, newnum
 
 
@@ -14,17 +14,6 @@ def main() -> None:
     # Get the dispatcher to register handlers
     dispatcher = updater.dispatcher
 
-    # MovieGuessingGame Conversation Handler
-    movie_Guessing_Game = ConversationHandler(
-        entry_points=[CommandHandler("MovieGuessingGame", movieGuessingGame)],
-        states={
-            PLAYMODE: [MessageHandler(Filters.regex("^(Easy|Hard)$"), playMode)],
-            GUESS: [MessageHandler(Filters.regex("^[\w*\s]*$"), movieGuess)],
-        },
-        fallbacks=[CommandHandler("stopgame", stopgame)],
-    )
-
-   
     # Main Commands
     dispatcher.add_handler(CommandHandler("cat", cat))
     dispatcher.add_handler(CommandHandler("help", help))
@@ -37,8 +26,18 @@ def main() -> None:
     dispatcher.add_handler(CommandHandler("wordle", wordle))
     dispatcher.add_handler(CommandHandler("stats", stats))
     dispatcher.add_handler(CommandHandler("howto", howto))
-    
-    # MovieGuessingGame added Conversation_Handler
+
+    # MovieGuessingGame Conversation Handler
+    movie_Guessing_Game = ConversationHandler(
+        entry_points=[CommandHandler("MovieGuessingGame", movieGuessingGame)],
+        states={
+            PLAYMODE: [MessageHandler(Filters.regex("^(Easy|Hard)$"), playMode)],
+            GUESS: [MessageHandler(Filters.regex("^[\w*\s]*$"), movieGuess)],
+        },
+        fallbacks=[CommandHandler("stopgame", stopgame)],
+    )
+
+    # MovieGuessingGame Commands
     dispatcher.add_handler(movie_Guessing_Game)
 
     # Numbergame Commands
