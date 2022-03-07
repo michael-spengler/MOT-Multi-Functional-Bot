@@ -5,7 +5,7 @@ from telegram import Update, ForceReply
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext
 from conf import API_KEY
 from main_commands import start, help_command, nudel, cat, echo
-from TicTacToe.TicTacToe_commands import stop, guess, ticTacToeGame
+from games.TicTacToe.TicTacToe_commands import stop, guess, ticTacToeGame
 from games.wordle.wordle_commands import guess, howto, stats, stop, wordle
 from games.MovieGame.moviegame import *
 from games.numbergame.numbergame_commands import numb, stopnumbergame, numbergame, newnum

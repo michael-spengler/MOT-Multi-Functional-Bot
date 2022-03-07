@@ -3,6 +3,7 @@ from telegram.ext import CallbackContext
 import requests
 from telegram import Update, ForceReply, Message
 from telegram.ext import Updater, CallbackContext
+from games.TicTacToe.TicTacToe_commands import *
 
 def log_input(update):
     print(f"{str(update.message.chat_id)} entered: '{update.message.text}'")
@@ -61,4 +62,4 @@ def cat(update: Update, context: CallbackContext) -> None:
     
 def tic(update: Update, context: CallbackContext) -> None:
     log_input(update)
-    TicTacToe_Multiplayer()
+    ticTacToeGame()
