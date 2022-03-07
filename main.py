@@ -1,3 +1,4 @@
+
 #!/usr/bin/env python
 
 from telegram import Update, ForceReply
@@ -5,10 +6,11 @@ from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, Callb
 from conf import API_KEY
 from main_commands import start, help_command, nudel, cat, echo
 from TicTacToe.TicTacToe_commands import stop, guess, ticTacToeGame
+from games.wordle.wordle_commands import guess, howto, stats, stop, wordle
+from games.MovieGame.moviegame import *
+from games.numbergame.numbergame_commands import numb, stopnumbergame, numbergame, newnum
 
 
-# Define a few command handlers. These usually take the two arguments update and
-# context.
 
 
 def main() -> None:
@@ -19,20 +21,47 @@ def main() -> None:
     # Get the dispatcher to register handlers
     dispatcher = updater.dispatcher
 
-    # on different commands - answer in Telegram
-    dispatcher.add_handler(CommandHandler("start", start))
-    dispatcher.add_handler(CommandHandler("help", help_command))
-    dispatcher.add_handler(CommandHandler("nudel", nudel))
+    # Main Commands
     dispatcher.add_handler(CommandHandler("cat", cat))
+
+
+    dispatcher.add_handler(CommandHandler("help", help))
+    dispatcher.add_handler(CommandHandler("noodle", noodle))
+    dispatcher.add_handler(CommandHandler("start", start))
+    
     #TicTacToe Kram
     dispatcher.add_handler(CommandHandler("tic", ticTacToeGame))
     dispatcher.add_handler(CommandHandler("guess", guess))
     dispatcher.add_handler(CommandHandler("stop", stop))
 
+    # Wordle Commands
+    dispatcher.add_handler(CommandHandler("guess", guess))
+    dispatcher.add_handler(CommandHandler("stop", stop))
+    dispatcher.add_handler(CommandHandler("wordle", wordle))
+    dispatcher.add_handler(CommandHandler("stats", stats))
+    dispatcher.add_handler(CommandHandler("howto", howto))
+
+    # MovieGuessingGame Conversation Handler
+    movie_Guessing_Game = ConversationHandler(
+        entry_points=[CommandHandler("MovieGuessingGame", movieGuessingGame)],
+        states={
+            PLAYMODE: [MessageHandler(Filters.regex("^(Easy|Hard)$"), playMode)],
+            GUESS: [MessageHandler(Filters.regex("^[\w*\s]*$"), movieGuess)],
+        },
+        fallbacks=[CommandHandler("stopgame", stopgame)],
+    )
+
+    # MovieGuessingGame Commands
+    dispatcher.add_handler(movie_Guessing_Game)
+
+    # Numbergame Commands
+    dispatcher.add_handler(CommandHandler("numb", numb))
+    dispatcher.add_handler(CommandHandler("stopnumbergame", stopnumbergame))
+    dispatcher.add_handler(CommandHandler("numbergame", numbergame))
+    dispatcher.add_handler(CommandHandler("newnum", newnum))
 
     # on non command i.e message - echo the message on Telegram
-    dispatcher.add_handler(MessageHandler(
-        Filters.text & ~Filters.command, echo))
+    dispatcher.add_handler(MessageHandler(Filters.text & ~Filters.command, echo))
 
     # Start the Bot
     updater.start_polling()
@@ -43,5 +72,5 @@ def main() -> None:
     updater.idle()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
